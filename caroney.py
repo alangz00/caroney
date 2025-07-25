@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
-import gspread
+#import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 # 🔐 Conectar con Google Sheets
