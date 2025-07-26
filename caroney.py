@@ -6,9 +6,9 @@ from io import BytesIO
 
 # 🔐 Conectar con Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("credenciales.json", scope)
-client = gspread.authorize(creds)
-sheet = client.open("CaroneyDB").sheet1  # Cambia esto si tu hoja se llama diferente
+#creds = ServiceAccountCredentials.from_json_keyfile_name("credenciales.json", scope)
+#client = gspread.authorize(creds)
+#sheet = client.open("CaroneyDB").sheet1  # Cambia esto si tu hoja se llama diferente
 
 # Configuración inicial
 st.set_page_config(page_title="Caroney", layout="centered")
@@ -17,8 +17,8 @@ st.markdown("Registra tus ingresos y egresos de forma compacta y bonita. ¡Hecho
 
 # Leer registros guardados en la hoja
 if 'records' not in st.session_state:
-    sheet_data = sheet.get_all_records()
-    st.session_state.records = sheet_data
+#    sheet_data = sheet.get_all_records()
+#    st.session_state.records = sheet_data
 
 # Formulario de entrada
 with st.form("entry_form"):
