@@ -10,7 +10,7 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 service_account_info = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
 client = gspread.authorize(creds)
-sheet = client.open("CaroneyDB").sheet1  # Asegúrate que así se llame tu hoja
+sheet = client.open("carodb").sheet1  # Asegúrate que así se llame tu hoja
 
 # Configuración inicial
 st.set_page_config(page_title="Caroney", layout="centered")
