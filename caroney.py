@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
+import datetime
 import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -46,48 +47,87 @@ with st.form("entry_form"):
     ]
 
     # Mostrar para depurar
-        st.write("Fila que se va a guardar:", row)
-    
-        # Guardar en el estado de sesión
-        st.session_state.records.append({
-            "Fecha": str(date),
-            "Monto": row[1],
-            "Tipo": row[2],
-            "Categoría": row[3],
-            "Descripción": row[4]
-        })
-    
-        # Guardar en Google Sheets
-        sheet.append_row(row)
-        st.success("Movimiento agregado ✅")
+    st.write("Fila que se va a guardar:", row)
+
+    # Guardar en el estado de sesión
+    st.session_state.records.append({
+        "Fecha": str(date),
+        "Monto": row[1],
+        "Tipo": row[2],
+        "Categoría": row[3],
+        "Descripción": row[4]
+    })
+
+    # Guardar en Google Sheets
+    sheet.append_row(row)
+    st.success("Movimiento agregado ✅")
 
 
 # Mostrar datos
 if st.session_state.records:
     df = pd.DataFrame(st.session_state.records)
 
-    # Verificar que existan las columnas necesarias
-    if all(col in df.columns for col in ["Tipo", "Monto"]):
-        st.subheader("📋 Historial")
+    df["Fecha"] = pd.to_datetime(df["Fecha"])
+    hoy = datetime.date.today()
+    df_dia = df[df["Fecha"].dt.date == hoy]
+
+    st.subheader("📅 Movimientos de hoy")
+    st.dataframe(df_dia, use_container_width=True)
+
+    ingresos_hoy = df_dia[df_dia["Tipo"] == "Ingreso"]["Monto"].sum()
+    egresos_hoy = -df_dia[df_dia["Tipo"] == "Egreso"]["Monto"].sum()
+    balance_hoy = df_dia["Monto"].sum()
+
+    st.markdown(f"**Ingresos hoy:** ${ingresos_hoy:.2f}")
+    st.markdown(f"**Egresos hoy:** ${egresos_hoy:.2f}")
+    st.markdown(f"**Balance hoy:** ${balance_hoy:.2f}")
+
+    if st.button("📖 Ver todos los movimientos"):
+        st.subheader("📋 Historial completo")
         st.dataframe(df, use_container_width=True)
 
-        # Totales
         total_ingresos = df[df["Tipo"] == "Ingreso"]["Monto"].sum()
         total_egresos = -df[df["Tipo"] == "Egreso"]["Monto"].sum()
-        balance = df["Monto"].sum()
+        balance_total = df["Monto"].sum()
 
-        st.markdown("---")
         st.markdown(f"**Total de ingresos:** ${total_ingresos:.2f}")
         st.markdown(f"**Total de egresos:** ${total_egresos:.2f}")
-        st.markdown(f"**Balance actual:** ${balance:.2f}")
+        st.markdown(f"**Balance general:** ${balance_total:.2f}")
 
-        # Descargar como Excel
+        towrite_full = BytesIO()
+        df.to_excel(towrite_full, index=False, sheet_name="Caroney")
+        towrite_full.seek(0)
+        st.download_button("📥 Descargar Excel completo", towrite_full, "caroney_completo.xlsx")
+
+    if st.button("📆 Filtrar por fechas"):
+        min_date = df["Fecha"].min().date()
+        max_date = df["Fecha"].max().date()
+
+        start_date, end_date = st.date_input(
+            "Selecciona el rango:",
+            value=(min_date, max_date),
+            min_value=min_date,
+            max_value=max_date
+        )
+
+        filtro = (df["Fecha"].dt.date >= start_date) & (df["Fecha"].dt.date <= end_date)
+        df_filtro = df[filtro]
+
+        st.subheader("📆 Movimientos filtrados")
+        st.dataframe(df_filtro, use_container_width=True)
+
+        ingresos_f = df_filtro[df_filtro["Tipo"] == "Ingreso"]["Monto"].sum()
+        egresos_f = -df_filtro[df_filtro["Tipo"] == "Egreso"]["Monto"].sum()
+        balance_f = df_filtro["Monto"].sum()
+
+        st.markdown(f"**Ingresos filtrados:** ${ingresos_f:.2f}")
+        st.markdown(f"**Egresos filtrados:** ${egresos_f:.2f}")
+        st.markdown(f"**Balance filtrado:** ${balance_f:.2f}")
+
         towrite = BytesIO()
-        df.to_excel(towrite, index=False, sheet_name="Caroney")
+        df_filtro.to_excel(towrite, index=False, sheet_name="Caroney")
         towrite.seek(0)
-        st.download_button("📥 Descargar Excel", towrite, "caroney.xlsx")
-    else:
-        st.warning("Los datos existentes no tienen el formato esperado.")
+        st.download_button("📥 Descargar Excel filtrado", towrite, "caroney_filtrado.xlsx")
+
 else:
     st.info("Aún no has registrado nada.")
-
