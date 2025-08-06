@@ -137,8 +137,38 @@ if st.session_state.records:
         st.markdown(f"**Total de egresos:** ${total_egresos:.2f}")
         st.markdown(f"**Balance general:** ${balance_total:.2f}")
 
+        from openpyxl import Workbook
+        from openpyxl.utils.dataframe import dataframe_to_rows
+        from openpyxl.styles import Font, Alignment
+
+        df_export = df.copy()
+        df_export["Fecha"] = pd.to_datetime(df_export["Fecha"]).dt.date
+
+        resumen = pd.DataFrame([
+            {"Fecha": "TOTAL", "Monto": total_ingresos, "Tipo": "Ingreso", "Descripción": "Ingresos totales"},
+            {"Fecha": "TOTAL", "Monto": total_egresos, "Tipo": "Egreso", "Descripción": "Egresos totales"},
+            {"Fecha": "TOTAL", "Monto": balance_total, "Descripción": "Balance neto"}
+        ])
+
+        df_export = pd.concat([df_export, pd.DataFrame([{}]), resumen], ignore_index=True)
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Caroney"
+
+        for r in dataframe_to_rows(df_export, index=False, header=True):
+            ws.append(r)
+
+        for cell in ws[1]:
+            cell.font = Font(bold=True)
+            cell.alignment = Alignment(horizontal="center")
+
+        for col in ws.columns:
+            max_len = max(len(str(cell.value)) if cell.value else 0 for cell in col)
+            ws.column_dimensions[col[0].column_letter].width = max_len + 2
+
         towrite_full = BytesIO()
-        df.to_excel(towrite_full, index=False, sheet_name="Caroney")
+        wb.save(towrite_full)
         towrite_full.seek(0)
         st.download_button("📥 Descargar Excel completo", towrite_full, "caroney_completo.xlsx")
 
