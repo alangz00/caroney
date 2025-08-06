@@ -11,7 +11,7 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 service_account_info = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
 client = gspread.authorize(creds)
-sheet = client.open("carodb").sheet1  # Asegúrate que así se llame tu hoja
+sheet = client.open("carodb").sheet1
 
 # Configuración inicial
 st.set_page_config(page_title="Caroney", layout="centered")
@@ -37,19 +37,14 @@ with st.form("entry_form"):
     submitted = st.form_submit_button("Agregar")
 
     if submitted:
-    # Construir la fila limpiamente
         row = [
-        str(date),
-        float(amount if type_ == "Ingreso" else -amount),
-        str(type_).strip(),
-        str(category).strip() if category else "Sin categoría",
-        str(description).strip() if description else ""
-    ]
+            str(date),
+            float(amount if type_ == "Ingreso" else -amount),
+            str(type_).strip(),
+            str(category).strip() if category else "Sin categoría",
+            str(description).strip() if description else ""
+        ]
 
-        # Mostrar para depurar
-        st.write("Fila que se va a guardar:", row)
-    
-        # Guardar en el estado de sesión
         st.session_state.records.append({
             "Fecha": str(date),
             "Monto": row[1],
@@ -57,16 +52,13 @@ with st.form("entry_form"):
             "Categoría": row[3],
             "Descripción": row[4]
         })
-    
-        # Guardar en Google Sheets
+
         sheet.append_row(row)
         st.success("Movimiento agregado ✅")
-
 
 # Mostrar datos
 if st.session_state.records:
     df = pd.DataFrame(st.session_state.records)
-
     df["Fecha"] = pd.to_datetime(df["Fecha"])
     hoy = datetime.date.today()
     df_dia = df[df["Fecha"].dt.date == hoy]
@@ -75,14 +67,14 @@ if st.session_state.records:
     st.dataframe(df_dia, use_container_width=True)
 
     ingresos_hoy = df_dia[df_dia["Tipo"] == "Ingreso"]["Monto"].sum()
-    egresos_hoy = -df_dia[df_dia["Tipo"] == "Egreso"]["Monto"].sum()
+    egresos_hoy = df_dia[df_dia["Tipo"] == "Egreso"]["Monto"].sum()
     balance_hoy = df_dia["Monto"].sum()
 
     st.markdown(f"**Ingresos hoy:** ${ingresos_hoy:.2f}")
-    st.markdown(f"**Egresos hoy:** ${egresos_hoy:.2f}")
+    st.markdown(f"**Egresos hoy:** ${abs(egresos_hoy):.2f}")
     st.markdown(f"**Balance hoy:** ${balance_hoy:.2f}")
-    
-    
+
+    # Filtro por fechas con toggle
     if "mostrar_filtro" not in st.session_state:
         st.session_state.mostrar_filtro = False
 
@@ -92,49 +84,50 @@ if st.session_state.records:
     if st.session_state.mostrar_filtro:
         min_date = df["Fecha"].min().date()
         max_date = df["Fecha"].max().date()
-    
+
         start_date, end_date = st.date_input(
             "Selecciona el rango:",
             value=(min_date, max_date),
             min_value=min_date,
             max_value=max_date
         )
-    
+
         filtro = (df["Fecha"].dt.date >= start_date) & (df["Fecha"].dt.date <= end_date)
         df_filtro = df[filtro]
-    
+
         st.subheader("📆 Movimientos filtrados")
         st.dataframe(df_filtro, use_container_width=True)
-    
+
         ingresos_f = df_filtro[df_filtro["Tipo"] == "Ingreso"]["Monto"].sum()
-        egresos_f = -df_filtro[df_filtro["Tipo"] == "Egreso"]["Monto"].sum()
+        egresos_f = df_filtro[df_filtro["Tipo"] == "Egreso"]["Monto"].sum()
         balance_f = df_filtro["Monto"].sum()
-    
+
         st.markdown(f"**Ingresos filtrados:** ${ingresos_f:.2f}")
-        st.markdown(f"**Egresos filtrados:** ${egresos_f:.2f}")
+        st.markdown(f"**Egresos filtrados:** ${abs(egresos_f):.2f}")
         st.markdown(f"**Balance filtrado:** ${balance_f:.2f}")
-    
+
         towrite = BytesIO()
         df_filtro.to_excel(towrite, index=False, sheet_name="Caroney")
         towrite.seek(0)
         st.download_button("📥 Descargar Excel filtrado", towrite, "caroney_filtrado.xlsx")
-            
+
+    # Historial completo con toggle
     if "mostrar_historial_completo" not in st.session_state:
         st.session_state.mostrar_historial_completo = False
-        
+
     if st.button("📖 Ver todos los movimientos"):
         st.session_state.mostrar_historial_completo = not st.session_state.mostrar_historial_completo
-   
+
     if st.session_state.mostrar_historial_completo:
         st.subheader("📋 Historial completo")
         st.dataframe(df, use_container_width=True)
 
         total_ingresos = df[df["Tipo"] == "Ingreso"]["Monto"].sum()
-        total_egresos = -df[df["Tipo"] == "Egreso"]["Monto"].sum()
+        total_egresos = df[df["Tipo"] == "Egreso"]["Monto"].sum()
         balance_total = df["Monto"].sum()
 
         st.markdown(f"**Total de ingresos:** ${total_ingresos:.2f}")
-        st.markdown(f"**Total de egresos:** ${total_egresos:.2f}")
+        st.markdown(f"**Total de egresos:** ${abs(total_egresos):.2f}")
         st.markdown(f"**Balance general:** ${balance_total:.2f}")
 
         towrite_full = BytesIO()
@@ -142,7 +135,6 @@ if st.session_state.records:
         towrite_full.seek(0)
         st.download_button("📥 Descargar Excel completo", towrite_full, "caroney_completo.xlsx")
 
-
-
 else:
     st.info("Aún no has registrado nada.")
+
