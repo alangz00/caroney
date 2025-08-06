@@ -81,6 +81,54 @@ if st.session_state.records:
     st.markdown(f"**Ingresos hoy:** ${ingresos_hoy:.2f}")
     st.markdown(f"**Egresos hoy:** ${egresos_hoy:.2f}")
     st.markdown(f"**Balance hoy:** ${balance_hoy:.2f}")
+    from openpyxl import Workbook
+    from openpyxl.utils.dataframe import dataframe_to_rows
+    from openpyxl.styles import Font, Alignment, Border, Side
+
+    df_dia_export = df_dia.copy()
+    df_dia_export["Fecha"] = pd.to_datetime(df_dia_export["Fecha"]).dt.date
+
+    resumen_dia = pd.DataFrame([
+        {"Fecha": "HOY", "Monto": ingresos_hoy, "Tipo": "Ingreso", "Descripción": "Ingresos hoy"},
+        {"Fecha": "HOY", "Monto": egresos_hoy, "Tipo": "Egreso", "Descripción": "Egresos hoy"},
+        {"Fecha": "HOY", "Monto": balance_hoy, "Descripción": "Balance neto hoy"}
+    ])
+
+    df_dia_export = pd.concat([df_dia_export, pd.DataFrame([{}]), resumen_dia], ignore_index=True)
+
+    wb_dia = Workbook()
+    ws_dia = wb_dia.active
+    ws_dia.title = "Caroney Hoy"
+
+    for r in dataframe_to_rows(df_dia_export, index=False, header=True):
+        ws_dia.append(r)
+
+    for cell in ws_dia[1]:
+        cell.font = Font(bold=True)
+        cell.alignment = Alignment(horizontal="center")
+
+    for col in ws_dia.columns:
+        max_len = max(len(str(cell.value)) if cell.value else 0 for cell in col)
+        ws_dia.column_dimensions[col[0].column_letter].width = max_len + 2
+
+    thin_border = Border(
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin")
+    )
+
+    for row in ws_dia.iter_rows(min_row=1, max_row=ws_dia.max_row, min_col=1, max_col=ws_dia.max_column):
+        for cell in row:
+            if cell.value is not None:
+                cell.border = thin_border
+
+    towrite_dia = BytesIO()
+    wb_dia.save(towrite_dia)
+    towrite_dia.seek(0)
+
+    st.download_button("📥 Descargar Excel de hoy", towrite_dia, "caroney_hoy.xlsx")
+
     
     
     if "mostrar_filtro" not in st.session_state:
@@ -117,7 +165,9 @@ if st.session_state.records:
         towrite = BytesIO()
         df_filtro.to_excel(towrite, index=False, sheet_name="Caroney")
         towrite.seek(0)
+        
         st.download_button("📥 Descargar Excel filtrado", towrite, "caroney_filtrado.xlsx")
+
             
     if "mostrar_historial_completo" not in st.session_state:
         st.session_state.mostrar_historial_completo = False
