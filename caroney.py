@@ -74,6 +74,26 @@ if st.session_state.records:
     st.markdown(f"**Egresos hoy:** ${abs(egresos_hoy):.2f}")
     st.markdown(f"**Balance hoy:** ${balance_hoy:.2f}")
 
+    # Agregar resumen
+    df_export_dia = df_dia.copy()
+    
+    resumen_dia = pd.DataFrame([
+        {"Fecha": "TOTAL", "Monto": ingresos_hoy, "Tipo": "Ingreso", "Descripción": "Ingresos totales"},
+        {"Fecha": "TOTAL", "Monto": egresos_hoy, "Tipo": "Egreso", "Descripción": "Egresos totales"},
+        {"Fecha": "TOTAL", "Monto": balance_hoy, "Descripción": "Balance neto"}
+    ])
+    
+    df_export_dia = pd.concat([df_export_dia, resumen_dia], ignore_index=True)
+    
+    # Exportar
+    towrite = BytesIO()
+    df_export_dia.to_excel(towrite, index=False, sheet_name="Caroney")
+    towrite.seek(0)
+    st.download_button("📥 Descargar Excel del día", towrite, "caroney_dia.xlsx")
+
+
+
+
     # Filtro por fechas con toggle
     if "mostrar_filtro" not in st.session_state:
         st.session_state.mostrar_filtro = False
@@ -106,10 +126,24 @@ if st.session_state.records:
         st.markdown(f"**Egresos filtrados:** ${abs(egresos_f):.2f}")
         st.markdown(f"**Balance filtrado:** ${balance_f:.2f}")
 
+        
+        # Agregar resumen
+        df_export_filtro = df_filtro.copy()
+        
+        resumen_filtro = pd.DataFrame([
+            {"Fecha": "TOTAL", "Monto": ingresos_f, "Tipo": "Ingreso", "Descripción": "Ingresos totales"},
+            {"Fecha": "TOTAL", "Monto": egresos_f, "Tipo": "Egreso", "Descripción": "Egresos totales"},
+            {"Fecha": "TOTAL", "Monto": balance_f, "Descripción": "Balance neto"}
+        ])
+        
+        df_export_filtro = pd.concat([df_export_filtro, resumen_filtro], ignore_index=True)
+        
+        # Exportar
         towrite = BytesIO()
-        df_filtro.to_excel(towrite, index=False, sheet_name="Caroney")
+        df_export_filtro.to_excel(towrite, index=False, sheet_name="Caroney")
         towrite.seek(0)
         st.download_button("📥 Descargar Excel filtrado", towrite, "caroney_filtrado.xlsx")
+
 
     # Historial completo con toggle
     if "mostrar_historial_completo" not in st.session_state:
@@ -130,10 +164,27 @@ if st.session_state.records:
         st.markdown(f"**Total de egresos:** ${abs(total_egresos):.2f}")
         st.markdown(f"**Balance general:** ${balance_total:.2f}")
 
+        # Agregar resumen al DataFrame antes de exportar
+        df_export = df.copy()
+        
+        total_ingresos = df_export[df_export["Tipo"] == "Ingreso"]["Monto"].sum()
+        total_egresos = df_export[df_export["Tipo"] == "Egreso"]["Monto"].sum()
+        balance = df_export["Monto"].sum()
+        
+        resumen = pd.DataFrame([
+            {"Fecha": "TOTAL", "Monto": total_ingresos, "Tipo": "Ingreso", "Descripción": "Ingresos totales"},
+            {"Fecha": "TOTAL", "Monto": total_egresos, "Tipo": "Egreso", "Descripción": "Egresos totales"},
+            {"Fecha": "TOTAL", "Monto": balance, "Descripción": "Balance neto"}
+        ])
+        
+        df_export = pd.concat([df_export, resumen], ignore_index=True)
+        
+        # Exportar a Excel
         towrite_full = BytesIO()
-        df.to_excel(towrite_full, index=False, sheet_name="Caroney")
+        df_export.to_excel(towrite_full, index=False, sheet_name="Caroney")
         towrite_full.seek(0)
         st.download_button("📥 Descargar Excel completo", towrite_full, "caroney_completo.xlsx")
+
 
 else:
     st.info("Aún no has registrado nada.")
