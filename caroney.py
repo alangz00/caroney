@@ -81,6 +81,44 @@ if st.session_state.records:
     st.markdown(f"**Ingresos hoy:** ${ingresos_hoy:.2f}")
     st.markdown(f"**Egresos hoy:** ${egresos_hoy:.2f}")
     st.markdown(f"**Balance hoy:** ${balance_hoy:.2f}")
+    
+    
+    if "mostrar_filtro" not in st.session_state:
+        st.session_state.mostrar_filtro = False
+
+    if st.button("📆 Filtrar por fechas"):
+        st.session_state.mostrar_filtro = not st.session_state.mostrar_filtro
+
+    if st.session_state.mostrar_filtro:
+        min_date = df["Fecha"].min().date()
+        max_date = df["Fecha"].max().date()
+    
+        start_date, end_date = st.date_input(
+            "Selecciona el rango:",
+            value=(min_date, max_date),
+            min_value=min_date,
+            max_value=max_date
+        )
+    
+        filtro = (df["Fecha"].dt.date >= start_date) & (df["Fecha"].dt.date <= end_date)
+        df_filtro = df[filtro]
+    
+        st.subheader("📆 Movimientos filtrados")
+        st.dataframe(df_filtro, use_container_width=True)
+    
+        ingresos_f = df_filtro[df_filtro["Tipo"] == "Ingreso"]["Monto"].sum()
+        egresos_f = -df_filtro[df_filtro["Tipo"] == "Egreso"]["Monto"].sum()
+        balance_f = df_filtro["Monto"].sum()
+    
+        st.markdown(f"**Ingresos filtrados:** ${ingresos_f:.2f}")
+        st.markdown(f"**Egresos filtrados:** ${egresos_f:.2f}")
+        st.markdown(f"**Balance filtrado:** ${balance_f:.2f}")
+    
+        towrite = BytesIO()
+        df_filtro.to_excel(towrite, index=False, sheet_name="Caroney")
+        towrite.seek(0)
+        st.download_button("📥 Descargar Excel filtrado", towrite, "caroney_filtrado.xlsx")
+            
 
     if st.button("📖 Ver todos los movimientos"):
         st.subheader("📋 Historial completo")
@@ -99,35 +137,7 @@ if st.session_state.records:
         towrite_full.seek(0)
         st.download_button("📥 Descargar Excel completo", towrite_full, "caroney_completo.xlsx")
 
-    if st.button("📆 Filtrar por fechas"):
-        min_date = df["Fecha"].min().date()
-        max_date = df["Fecha"].max().date()
 
-        start_date, end_date = st.date_input(
-            "Selecciona el rango:",
-            value=(min_date, max_date),
-            min_value=min_date,
-            max_value=max_date
-        )
-
-        filtro = (df["Fecha"].dt.date >= start_date) & (df["Fecha"].dt.date <= end_date)
-        df_filtro = df[filtro]
-
-        st.subheader("📆 Movimientos filtrados")
-        st.dataframe(df_filtro, use_container_width=True)
-
-        ingresos_f = df_filtro[df_filtro["Tipo"] == "Ingreso"]["Monto"].sum()
-        egresos_f = -df_filtro[df_filtro["Tipo"] == "Egreso"]["Monto"].sum()
-        balance_f = df_filtro["Monto"].sum()
-
-        st.markdown(f"**Ingresos filtrados:** ${ingresos_f:.2f}")
-        st.markdown(f"**Egresos filtrados:** ${egresos_f:.2f}")
-        st.markdown(f"**Balance filtrado:** ${balance_f:.2f}")
-
-        towrite = BytesIO()
-        df_filtro.to_excel(towrite, index=False, sheet_name="Caroney")
-        towrite.seek(0)
-        st.download_button("📥 Descargar Excel filtrado", towrite, "caroney_filtrado.xlsx")
 
 else:
     st.info("Aún no has registrado nada.")
