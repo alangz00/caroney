@@ -36,15 +36,31 @@ with st.form("entry_form"):
     submitted = st.form_submit_button("Agregar")
 
     if submitted:
-        st.session_state.records.append({
-            "Fecha": str(date),
-            "Monto": amount if type_ == "Ingreso" else -amount,
-            "Tipo": type_,
-            "Categoría": category,
-            "Descripción": description
-        })
-        sheet.append_row([str(date), amount if type_ == "Ingreso" else -amount, type_, category, description])
-        st.success("Movimiento agregado ✅")
+    # Construir la fila limpiamente
+        row = [
+        str(date),
+        float(amount if type_ == "Ingreso" else -amount),
+        str(type_).strip(),
+        str(category).strip() if category else "Sin categoría",
+        str(description).strip() if description else ""
+    ]
+
+    # Mostrar para depurar
+    st.write("Fila que se va a guardar:", row)
+
+    # Guardar en el estado de sesión
+    st.session_state.records.append({
+        "Fecha": str(date),
+        "Monto": row[1],
+        "Tipo": row[2],
+        "Categoría": row[3],
+        "Descripción": row[4]
+    })
+
+    # Guardar en Google Sheets
+    sheet.append_row(row)
+    st.success("Movimiento agregado ✅")
+
 
 # Mostrar datos
 if st.session_state.records:
