@@ -119,8 +119,13 @@ if st.session_state.records:
         towrite.seek(0)
         st.download_button("📥 Descargar Excel filtrado", towrite, "caroney_filtrado.xlsx")
             
-
+    if "mostrar_historial_completo" not in st.session_state:
+        st.session_state.mostrar_historial_completo = False
+        
     if st.button("📖 Ver todos los movimientos"):
+        st.session_state.mostrar_historial_completo = not st.session_state.mostrar_historial_completo
+   
+    if st.session_state.mostrar_historial_completo:
         st.subheader("📋 Historial completo")
         st.dataframe(df, use_container_width=True)
 
