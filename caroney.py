@@ -38,51 +38,56 @@ with st.form("entry_form"):
     if submitted:
     # Construir la fila limpiamente
         row = [
-            str(date),
-            float(amount if type_ == "Ingreso" else -amount),
-            str(type_).strip(),
-            str(category).strip() if category else "Sin categoría",
-            str(description).strip() if description else ""
-        ]
-    
-        # Mostrar para depurar
-        st.write("Fila que se va a guardar:", row)
-    
-        # Guardar en el estado de sesión
-        st.session_state.records.append({
-            "Fecha": str(date),
-            "Monto": row[1],
-            "Tipo": row[2],
-            "Categoría": row[3],
-            "Descripción": row[4]
-        })
-    
-        # Guardar en Google Sheets
-        sheet.append_row(row)
-        st.success("Movimiento agregado ✅")
+        str(date),
+        float(amount if type_ == "Ingreso" else -amount),
+        str(type_).strip(),
+        str(category).strip() if category else "Sin categoría",
+        str(description).strip() if description else ""
+    ]
+
+    # Mostrar para depurar
+    st.write("Fila que se va a guardar:", row)
+
+    # Guardar en el estado de sesión
+    st.session_state.records.append({
+        "Fecha": str(date),
+        "Monto": row[1],
+        "Tipo": row[2],
+        "Categoría": row[3],
+        "Descripción": row[4]
+    })
+
+    # Guardar en Google Sheets
+    sheet.append_row(row)
+    st.success("Movimiento agregado ✅")
 
 
 # Mostrar datos
 if st.session_state.records:
     df = pd.DataFrame(st.session_state.records)
-    st.subheader("📋 Historial")
-    st.dataframe(df, use_container_width=True)
 
-    # Totales
-    total_ingresos = df[df["Tipo"] == "Ingreso"]["Monto"].sum()
-    total_egresos = -df[df["Tipo"] == "Egreso"]["Monto"].sum()
-    balance = df["Monto"].sum()
+    # Verificar que existan las columnas necesarias
+    if all(col in df.columns for col in ["Tipo", "Monto"]):
+        st.subheader("📋 Historial")
+        st.dataframe(df, use_container_width=True)
 
-    st.markdown("---")
-    st.markdown(f"**Total de ingresos:** ${total_ingresos:.2f}")
-    st.markdown(f"**Total de egresos:** ${total_egresos:.2f}")
-    st.markdown(f"**Balance actual:** ${balance:.2f}")
+        # Totales
+        total_ingresos = df[df["Tipo"] == "Ingreso"]["Monto"].sum()
+        total_egresos = -df[df["Tipo"] == "Egreso"]["Monto"].sum()
+        balance = df["Monto"].sum()
 
-    # Descargar como Excel
-    towrite = BytesIO()
-    df.to_excel(towrite, index=False, sheet_name="Caroney")
-    towrite.seek(0)
-    st.download_button("📥 Descargar Excel", towrite, "caroney.xlsx")
+        st.markdown("---")
+        st.markdown(f"**Total de ingresos:** ${total_ingresos:.2f}")
+        st.markdown(f"**Total de egresos:** ${total_egresos:.2f}")
+        st.markdown(f"**Balance actual:** ${balance:.2f}")
 
+        # Descargar como Excel
+        towrite = BytesIO()
+        df.to_excel(towrite, index=False, sheet_name="Caroney")
+        towrite.seek(0)
+        st.download_button("📥 Descargar Excel", towrite, "caroney.xlsx")
+    else:
+        st.warning("Los datos existentes no tienen el formato esperado.")
 else:
     st.info("Aún no has registrado nada.")
+
