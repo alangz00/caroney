@@ -46,20 +46,20 @@ with st.form("entry_form"):
     ]
 
     # Mostrar para depurar
-    st.write("Fila que se va a guardar:", row)
-
-    # Guardar en el estado de sesión
-    st.session_state.records.append({
-        "Fecha": str(date),
-        "Monto": row[1],
-        "Tipo": row[2],
-        "Categoría": row[3],
-        "Descripción": row[4]
-    })
-
-    # Guardar en Google Sheets
-    sheet.append_row(row)
-    st.success("Movimiento agregado ✅")
+        st.write("Fila que se va a guardar:", row)
+    
+        # Guardar en el estado de sesión
+        st.session_state.records.append({
+            "Fecha": str(date),
+            "Monto": row[1],
+            "Tipo": row[2],
+            "Categoría": row[3],
+            "Descripción": row[4]
+        })
+    
+        # Guardar en Google Sheets
+        sheet.append_row(row)
+        st.success("Movimiento agregado ✅")
 
 
 # Mostrar datos
