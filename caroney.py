@@ -15,7 +15,7 @@ sheet = client.open("carodb").sheet1  # Asegúrate que así se llame tu hoja
 
 # Configuración inicial
 st.set_page_config(page_title="Caroney", layout="centered")
-st.title("💸 Caroney -Carolina directora Tu contabilidad sencilla... se supone")
+st.title("💸 Caroney - Tu contabilidad sencilla... se supone")
 st.markdown("Registra tus ingresos y egresos.")
 
 # Leer registros guardados en la hoja
