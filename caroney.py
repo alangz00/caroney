@@ -19,7 +19,7 @@ client = gspread.authorize(creds)
 sheet = client.open("carodb").sheet1  # Asegúrate que así se llame tu hoja
 
 # Configuración inicial
-st.set_page_config(page_title="Caroney", layout="centered")
+st.set_page_config(page_title="Caroney", layout="centered",page_icon="🐎")
 st.title("💸 Caroney - Tu contabilidad sencilla... se supone")
 st.markdown("Registra tus ingresos y egresos de forma compacta y bonita. ¡Hecho con cariño!")
 
