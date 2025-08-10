@@ -17,6 +17,13 @@ from openpyxl.styles import Font, Alignment, Border, Side
 st.set_page_config(page_title="Caroney", page_icon="🐎", layout="centered")
 st.title("💸 Caroney - Tu contabilidad sencilla... se supone")
 st.markdown("Registra tus ingresos y egresos de forma compacta y bonita. ¡Hecho con cariño!")
+# Botón de refrescar datos
+if st.button("🔄 Actualizar datos"):
+    if "records" in st.session_state:
+        del st.session_state["records"]
+    st.rerun()
+
+
 
 # 🔐 Conectar con Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
