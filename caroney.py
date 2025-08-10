@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 from io import BytesIO
@@ -6,10 +7,17 @@ import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-# (opcional) si no tienes openpyxl instalado en tu deploy, comenta estos imports
+# Formato Excel (openpyxl)
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Font, Alignment, Border, Side
+
+# =========================
+# Config general de la app
+# =========================
+st.set_page_config(page_title="Caroney", page_icon="🐎", layout="centered")
+st.title("💸 Caroney - Tu contabilidad sencilla... se supone")
+st.markdown("Registra tus ingresos y egresos de forma compacta y bonita. ¡Hecho con cariño!")
 
 # 🔐 Conectar con Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -18,17 +26,16 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, s
 client = gspread.authorize(creds)
 sheet = client.open("carodb").sheet1  # Asegúrate que así se llame tu hoja
 
-# Configuración inicial
-st.set_page_config(page_title="Caroney", layout="centered",page_icon="🐎")
-st.title("💸 Caroney - Tu contabilidad sencilla... se supone")
-st.markdown("Registra tus ingresos y egresos de forma compacta y bonita. ¡Hecho con cariño!")
-
-# Leer registros guardados en la hoja
+# =========================
+# Carga de datos
+# =========================
 if "records" not in st.session_state:
     sheet_data = sheet.get_all_records()
     st.session_state.records = sheet_data
 
-# ========== Formulario de entrada ==========
+# =========================
+# Formulario de entrada
+# =========================
 with st.form("entry_form"):
     col1, col2 = st.columns(2)
     with col1:
@@ -66,7 +73,9 @@ with st.form("entry_form"):
         sheet.append_row(row)
         st.success("Movimiento agregado ✅")
 
-# ========== Mostrar datos ==========
+# =========================
+# Mostrar datos
+# =========================
 if st.session_state.records:
     df = pd.DataFrame(st.session_state.records)
     df["Fecha"] = pd.to_datetime(df["Fecha"])
@@ -94,11 +103,9 @@ if st.session_state.records:
         st.markdown(f"**Egresos del mes:** ${egresos_mes:.2f}")
         st.markdown(f"**Balance del mes:** ${balance_mes:.2f}")
 
-        # 🔽 Excel del mes con resumen formateado y nombre de archivo con mes en español
-        meses_es = [
-            "", "enero", "febrero", "marzo", "abril", "mayo", "junio",
-            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-        ]
+        # Excel del mes (bonito + resumen) con nombre por mes
+        meses_es = ["", "enero", "febrero", "marzo", "abril", "mayo", "junio",
+                    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
         mes_nombre = f"{meses_es[hoy.month]} {hoy.year}"
 
         df_mes_export = df_mes.copy()
@@ -132,12 +139,8 @@ if st.session_state.records:
             ws_mes.column_dimensions[col[0].column_letter].width = max_len + 2
 
         # Bordes delgados
-        thin_border = Border(
-            left=Side(style="thin"),
-            right=Side(style="thin"),
-            top=Side(style="thin"),
-            bottom=Side(style="thin"),
-        )
+        thin_border = Border(left=Side(style="thin"), right=Side(style="thin"),
+                             top=Side(style="thin"), bottom=Side(style="thin"))
         for row in ws_mes.iter_rows(min_row=1, max_row=ws_mes.max_row, min_col=1, max_col=ws_mes.max_column):
             for cell in row:
                 if cell.value is not None:
@@ -149,7 +152,7 @@ if st.session_state.records:
         st.download_button("📥 Descargar Excel del mes", towrite_mes, f"caroney_mes_{mes_nombre}.xlsx")
 
     # ===================================
-    # 📆 Filtro por fechas + Excel simple
+    # 📆 Filtro por fechas + Excel bonito
     # ===================================
     if "mostrar_filtro" not in st.session_state:
         st.session_state.mostrar_filtro = False
@@ -169,23 +172,66 @@ if st.session_state.records:
         )
 
         filtro = (df["Fecha"].dt.date >= start_date) & (df["Fecha"].dt.date <= end_date)
-        df_filtro = df[filtro]
+        df_filtro = df[filtro].copy()
 
         st.subheader("📆 Movimientos filtrados")
-        st.dataframe(df_filtro, use_container_width=True)
+        if df_filtro.empty:
+            st.info("No hay movimientos en el rango seleccionado.")
+        else:
+            st.dataframe(df_filtro, use_container_width=True)
 
-        ingresos_f = df_filtro[df_filtro["Tipo"] == "Ingreso"]["Monto"].sum()
-        egresos_f = -df_filtro[df_filtro["Tipo"] == "Egreso"]["Monto"].sum()
-        balance_f = df_filtro["Monto"].sum()
+            ingresos_f = df_filtro[df_filtro["Tipo"] == "Ingreso"]["Monto"].sum()
+            egresos_f = -df_filtro[df_filtro["Tipo"] == "Egreso"]["Monto"].sum()
+            balance_f = df_filtro["Monto"].sum()
 
-        st.markdown(f"**Ingresos filtrados:** ${ingresos_f:.2f}")
-        st.markdown(f"**Egresos filtrados:** ${egresos_f:.2f}")
-        st.markdown(f"**Balance filtrado:** ${balance_f:.2f}")
+            st.markdown(f"**Ingresos filtrados:** ${ingresos_f:.2f}")
+            st.markdown(f"**Egresos filtrados:** ${egresos_f:.2f}")
+            st.markdown(f"**Balance filtrado:** ${balance_f:.2f}")
 
-        towrite = BytesIO()
-        df_filtro.to_excel(towrite, index=False, sheet_name="Caroney")
-        towrite.seek(0)
-        st.download_button("📥 Descargar Excel filtrado", towrite, "caroney_filtrado.xlsx")
+            # ---------- Excel filtrado BONITO (formato + resumen) ----------
+            df_filtro_export = df_filtro.copy()
+            df_filtro_export["Fecha"] = pd.to_datetime(df_filtro_export["Fecha"]).dt.date
+
+            resumen_f = pd.DataFrame([
+                {"Fecha": "RANGO", "Monto": ingresos_f, "Tipo": "Ingreso", "Descripción": "Ingresos (rango)"},
+                {"Fecha": "RANGO", "Monto": egresos_f, "Tipo": "Egreso", "Descripción": "Egresos (rango)"},
+                {"Fecha": "RANGO", "Monto": balance_f, "Descripción": "Balance neto (rango)"}
+            ])
+
+            df_filtro_export = pd.concat([df_filtro_export, pd.DataFrame([{}]), resumen_f], ignore_index=True)
+
+            wb_f = Workbook()
+            ws_f = wb_f.active
+            ws_f.title = "Caroney Rango"
+
+            for r in dataframe_to_rows(df_filtro_export, index=False, header=True):
+                ws_f.append(r)
+
+            # Encabezados: negritas + centrado
+            for cell in ws_f[1]:
+                cell.font = Font(bold=True)
+                cell.alignment = Alignment(horizontal="center")
+
+            # Auto ancho de columnas
+            for col in ws_f.columns:
+                max_len = max(len(str(cell.value)) if cell.value else 0 for cell in col)
+                ws_f.column_dimensions[col[0].column_letter].width = max_len + 2
+
+            # Bordes delgados
+            thin_border = Border(left=Side(style="thin"), right=Side(style="thin"),
+                                 top=Side(style="thin"), bottom=Side(style="thin"))
+            for row in ws_f.iter_rows(min_row=1, max_row=ws_f.max_row, min_col=1, max_col=ws_f.max_column):
+                for cell in row:
+                    if cell.value is not None:
+                        cell.border = thin_border
+
+            # Nombre de archivo con rango
+            fname = f"caroney_filtrado_{start_date.isoformat()}_a_{end_date.isoformat()}.xlsx"
+
+            towrite = BytesIO()
+            wb_f.save(towrite)
+            towrite.seek(0)
+            st.download_button("📥 Descargar Excel filtrado", towrite, fname)
 
     # =====================================
     # 📖 Historial completo + Excel bonito
@@ -236,12 +282,8 @@ if st.session_state.records:
             max_len = max(len(str(cell.value)) if cell.value else 0 for cell in col)
             ws.column_dimensions[col[0].column_letter].width = max_len + 2
 
-        thin_border = Border(
-            left=Side(style="thin"),
-            right=Side(style="thin"),
-            top=Side(style="thin"),
-            bottom=Side(style="thin"),
-        )
+        thin_border = Border(left=Side(style="thin"), right=Side(style="thin"),
+                             top=Side(style="thin"), bottom=Side(style="thin"))
         for row in ws.iter_rows(min_row=1, max_row=ws.max_row, min_col=1, max_col=ws.max_column):
             for cell in row:
                 if cell.value is not None:
