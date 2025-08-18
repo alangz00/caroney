@@ -15,7 +15,7 @@ from openpyxl.styles import Font, Alignment, Border, Side
 # Config general de la app
 # =========================
 st.set_page_config(page_title="Caroney", page_icon="🐎", layout="centered")
-st.title("💸 Caroney - Tu contabilidad sencilla... se supone")
+st.title("💸 Caroney - Las estrellas te piden consejos para brillar... show them")
 st.markdown("Registra tus ingresos y egresos de forma compacta y bonita. ¡Hecho con cariño!")
 # Botón de refrescar datos
 if st.button("🔄 Actualizar datos"):
