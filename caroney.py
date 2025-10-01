@@ -23,6 +23,20 @@ if st.button("🔄 Actualizar datos"):
         del st.session_state["records"]
     st.rerun()
 
+# =====================================
+# 🎃 Mensaje de Octubre
+# =====================================
+st.markdown("---")
+st.subheader("🎃 Especial de Octubre")
+
+if st.button("Click aquí para una sorpresa 👻"):
+    st.markdown("¡Feliz Octubre! 🍂🍁")
+    st.image(
+        "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+        caption="¡Sorpresa! 🎃"
+    )
+# ==========================
+# ==========================
 
 
 # 🔐 Conectar con Google Sheets
@@ -393,15 +407,3 @@ else:
             st.success("Movimiento eliminado ✅")
             st.rerun()
 
-# =====================================
-# 🎃 Mensaje de Octubre
-# =====================================
-st.markdown("---")
-st.subheader("🎃 Especial de Octubre")
-
-if st.button("Click aquí para una sorpresa 👻"):
-    st.markdown("¡Feliz Octubre! 🍂🍁")
-    st.image(
-        "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
-        caption="¡Sorpresa! 🎃"
-    )
