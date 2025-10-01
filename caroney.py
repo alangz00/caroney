@@ -32,7 +32,7 @@ st.subheader("🎃 Especial de Octubre")
 if st.button("Click aquí para una sorpresa 👻"):
     st.markdown("¡Feliz Octubre! 🍂🍁")
     st.image(
-        "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+        "https://media.giphy.com/media/3orieYlY4JG1N2VR0Q/giphy.gif",
         caption="¡Sorpresa! 🎃"
     )
 # ==========================
