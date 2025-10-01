@@ -1,7 +1,7 @@
 name: keep-caroney-awake
 on:
   schedule:
-    - cron: "*/20 * * * *"   # cada 20 minutos
+    - cron: "0 */12 * * *"   # cada 12 horas
   workflow_dispatch:
 jobs:
   ping:
