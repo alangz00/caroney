@@ -11,6 +11,19 @@ from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Font, Alignment, Border, Side
 
+
+def vista_con_conteo(df, drop_cols=None):
+    """Devuelve una copia solo para mostrar, con columna '#' = 1..N.
+    No modifica el df original."""
+    if drop_cols:
+        show = df.drop(columns=drop_cols).copy()
+    else:
+        show = df.copy()
+    show.insert(0, "#", range(1, len(show) + 1))
+    return show
+
+
+
 # =========================
 # Config general de la app
 # =========================
@@ -166,7 +179,10 @@ st.subheader("📆 Movimientos del mes (hasta hoy)")
 if df_mes.empty:
     st.info("Aún no hay movimientos este mes.")
 else:
-    st.dataframe(df_mes.drop(columns=["GSRow"]), use_container_width=True)
+#    st.dataframe(df_mes.drop(columns=["GSRow"]), use_container_width=True)
+    st.dataframe(vista_con_conteo(df_mes), use_container_width=True)
+
+
 
     ingresos_mes = df_mes[df_mes["Tipo"] == "Ingreso"]["Monto"].sum()
     egresos_mes = -df_mes[df_mes["Tipo"] == "Egreso"]["Monto"].sum()
@@ -251,7 +267,8 @@ if st.session_state.mostrar_filtro:
     if df_filtro.empty:
         st.info("No hay movimientos en el rango seleccionado.")
     else:
-        st.dataframe(df_filtro.drop(columns=["GSRow"]), use_container_width=True)
+       # st.dataframe(df_filtro.drop(columns=["GSRow"]), use_container_width=True)
+        st.dataframe(vista_con_conteo(df_filtro, drop_cols=["GSRow"]), use_container_width=True)
 
         ingresos_f = df_filtro[df_filtro["Tipo"] == "Ingreso"]["Monto"].sum()
         egresos_f = -df_filtro[df_filtro["Tipo"] == "Egreso"]["Monto"].sum()
@@ -317,7 +334,8 @@ if st.button("📖 Ver todos los movimientos"):
 
 if st.session_state.mostrar_historial_completo:
     st.subheader("📋 Historial completo")
-    st.dataframe(df.drop(columns=["GSRow"]), use_container_width=True)
+#    st.dataframe(df.drop(columns=["GSRow"]), use_container_width=True)
+    st.dataframe(vista_con_conteo(df, drop_cols=["GSRow"]), use_container_width=True)
 
     total_ingresos = df[df["Tipo"] == "Ingreso"]["Monto"].sum()
     total_egresos = -df[df["Tipo"] == "Egreso"]["Monto"].sum()
