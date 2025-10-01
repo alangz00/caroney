@@ -1,14 +1,1 @@
-name: keep-caroney-awake
-on:
-  schedule:
-    - cron: "*/20 * * * *"   # cada 20 minutos
-  workflow_dispatch:
-jobs:
-  ping:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Curl app
-        run: |
-          curl -sSfL "$APP_URL" -o /dev/null
-        env:
-          APP_URL: "https://caroney.streamlit.app/"
+
