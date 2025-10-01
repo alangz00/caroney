@@ -36,17 +36,22 @@ st.subheader("🎃 Especial de Octubre")
 
 gifs = [
     # 🐱 Gatitos
-    #"https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
-    #"https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif",
-    #"https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
+    "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+    "https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif",
+    "https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
     # 🐶 Perritos
     #"https://media.giphy.com/media/26FPqut4b5p7K6kju/giphy.gif",
     #"https://media.giphy.com/media/26tPplGWjN0xLybiU/giphy.gif",
     # 🐴 Caballos
     "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3cyYzkyMXE5aGVma2ozN2JkMDkxYW5uZXlsOHdydTJlNGtjb2ptaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xqBpxjk7CXLtm/giphy.gif",
     #"https://media.giphy.com/media/3orieYlY4JG1N2VR0Q/giphy.gif",
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmc5aWs4bndsNHV6anU5cHBiZTE4M3hpdzY2eHMzZDJmeGZuN2dmbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Qy822ZaUS6ugYfwMzt/giphy.gif",
+    "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExOW13OWZrYmtxZHI0a21nbndzcnNhbGs2anlwZmhsa3g3NGt4aW05MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/UqAT69uTfA4BvYcZ1j/giphy.gif",
+    "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzhic2Zna3Q2dWx1dHQ2M3J2bTNsaHhpcDR4NmlnZWZ0NGMzMDI2dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2gLxx75OmfCaNu2yI8/giphy.gif",
+    "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmMxOHNhenM3eG5yNWJlOW85d2tydmJkNnpkeWlqcG5obWE2dXZ3biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/mDHD0JOFE3Sn1FCqX3/giphy.gif",
+    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmx2cDF1czVqZ2J0eXc3Z21hOTg1YWZ4YTl2dXFkMHhmcGNwYnViaiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ycB36KeEsRj0kXjW4H/giphy.gif",
     # 🌸 Otros bonitos
-    #"https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",
+    "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",
     #"https://media.giphy.com/media/l0MYEqEzwMWFCg8rm/giphy.gif"
 ]
 
