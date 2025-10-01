@@ -43,7 +43,7 @@ gifs = [
     #"https://media.giphy.com/media/26FPqut4b5p7K6kju/giphy.gif",
     #"https://media.giphy.com/media/26tPplGWjN0xLybiU/giphy.gif",
     # 🐴 Caballos
-    "https://giphy.com/gifs/funny-dance-weird-xqBpxjk7CXLtm",
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3cyYzkyMXE5aGVma2ozN2JkMDkxYW5uZXlsOHdydTJlNGtjb2ptaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xqBpxjk7CXLtm/giphy.gif",
     #"https://media.giphy.com/media/3orieYlY4JG1N2VR0Q/giphy.gif",
     # 🌸 Otros bonitos
     #"https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",
