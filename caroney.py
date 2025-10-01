@@ -23,18 +23,40 @@ if st.button("🔄 Actualizar datos"):
         del st.session_state["records"]
     st.rerun()
 
+
+
 # =====================================
-# 🎃 Mensaje de Octubre
+# 🎃 Mensaje de Octubre con GIF aleatorio
 # =====================================
+import random
+
+
 st.markdown("---")
 st.subheader("🎃 Especial de Octubre")
 
+gifs = [
+    # 🐱 Gatitos
+    "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+    "https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif",
+    "https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
+    # 🐶 Perritos
+    "https://media.giphy.com/media/26FPqut4b5p7K6kju/giphy.gif",
+    "https://media.giphy.com/media/26tPplGWjN0xLybiU/giphy.gif",
+    # 🐴 Caballos
+    "https://media.giphy.com/media/3o6ZsX2dPeaT6vV6FG/giphy.gif",
+    "https://media.giphy.com/media/3orieYlY4JG1N2VR0Q/giphy.gif",
+    # 🌸 Otros bonitos
+    "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",
+    "https://media.giphy.com/media/l0MYEqEzwMWFCg8rm/giphy.gif"
+]
+
 if st.button("Click aquí para una sorpresa 👻"):
+    gif_url = random.choice(gifs)
     st.markdown("¡Feliz Octubre! 🍂🍁")
-    st.image(
-        "https://media.giphy.com/media/3orieYlY4JG1N2VR0Q/giphy.gif",
-        caption="¡Sorpresa! 🎃"
-    )
+    st.image(gif_url, caption="¡Sorpresa! 🎃")
+
+    
+    
 # ==========================
 # ==========================
 
