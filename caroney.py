@@ -15,7 +15,7 @@ from openpyxl.styles import Font, Alignment, Border, Side
 # Config general de la app
 # =========================
 st.set_page_config(page_title="Caroney", page_icon="🐎", layout="centered")
-st.title("💸 - Caroney -")
+st.title("💸 - Caroney - Feliz Espuki Sison")
 st.markdown("Registra tus ingresos y egresos de forma compacta y bonita. ¡Hecho con cariño!")
 # Botón de refrescar datos
 if st.button("🔄 Actualizar datos"):
@@ -392,3 +392,16 @@ else:
             sheet.delete_rows(gsrow)
             st.success("Movimiento eliminado ✅")
             st.rerun()
+
+# =====================================
+# 🎃 Mensaje de Octubre
+# =====================================
+st.markdown("---")
+st.subheader("🎃 Especial de Octubre")
+
+if st.button("Click aquí para una sorpresa 👻"):
+    st.markdown("¡Feliz Octubre! 🍂🍁")
+    st.image(
+        "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+        caption="¡Sorpresa! 🎃"
+    )
