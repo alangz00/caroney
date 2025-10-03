@@ -69,7 +69,7 @@ gifs = [
 """    
     #Hate
     "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDVsMWdhNWN5MnM3MmQycWdjMDlob3Nod2Y0bmY1aG42cnpvdnZlZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/mWO9gCz9v4Ak3cJJMO/giphy.gif",
-    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDVsMWdhNWN5MnM3MmQycWdjMDlob3Nod2Y0bmY1aG42cnpvdnZlZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l1J3G5lf06vi58EIE/giphy.gif",
+    #https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDVsMWdhNWN5MnM3MmQycWdjMDlob3Nod2Y0bmY1aG42cnpvdnZlZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l1J3G5lf06vi58EIE/giphy.gif",
     "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDVsMWdhNWN5MnM3MmQycWdjMDlob3Nod2Y0bmY1aG42cnpvdnZlZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/YPz4LRDTXKWloIp4Wl/giphy.gif",
     "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJqM2s5YXo0eGFuNWt6eHNna3h4Z2JuNmtiODkya3VhY2cwM2R6eCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/K9JEh1N5I6JvbgbESw/giphy.gif",
 
