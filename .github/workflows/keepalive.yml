@@ -1,17 +1,20 @@
 name: keep-caroney-awake
 on:
   schedule:
-    - cron: "0 */12 * * *"   # cada 12 horas
+    - cron: "0 */12 * * *"  # cada 12 horas
   workflow_dispatch:
+
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      # El paso de 'checkout' no es necesario para este caso, puedes quitarlo
+      # - name: Checkout repo
+      #   uses: actions/checkout@v3
 
       - name: Curl app
+        env:
+          # 👇 AQUÍ ESTÁ LA CORRECCIÓN
+          APP_URL: "https://caroney.streamlit.app/" 
         run: |
           curl -sSfL "$APP_URL" -o /dev/null
-        env:
-          APP_URL: "https://caroney.streamlit.app/"
