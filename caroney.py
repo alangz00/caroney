@@ -52,7 +52,6 @@ st.markdown("---")
 st.subheader("🎃 Especial de Octubre")
 
 gifs = [
-"""        
     # 🐱 Gatitos
     "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
     "https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif",
@@ -66,9 +65,9 @@ gifs = [
     "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmMxOHNhenM3eG5yNWJlOW85d2tydmJkNnpkeWlqcG5obWE2dXZ3biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/mDHD0JOFE3Sn1FCqX3/giphy.gif",
     "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmx2cDF1czVqZ2J0eXc3Z21hOTg1YWZ4YTl2dXFkMHhmcGNwYnViaiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ycB36KeEsRj0kXjW4H/giphy.gif",
     "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",
-"""    
+
     #Hate
-    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDVsMWdhNWN5MnM3MmQycWdjMDlob3Nod2Y0bmY1aG42cnpvdnZlZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l1J3G5lf06vi58EIE/giphy.gif",
+    
     "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDVsMWdhNWN5MnM3MmQycWdjMDlob3Nod2Y0bmY1aG42cnpvdnZlZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/YPz4LRDTXKWloIp4Wl/giphy.gif",
     "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJqM2s5YXo0eGFuNWt6eHNna3h4Z2JuNmtiODkya3VhY2cwM2R6eCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/K9JEh1N5I6JvbgbESw/giphy.gif",
 
