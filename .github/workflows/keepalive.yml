@@ -15,6 +15,6 @@ jobs:
       - name: Curl app
         env:
           # 👇 AQUÍ ESTÁ LA CORRECCIÓN
-          APP_URL: "https://caroney.streamlit.app/" 
+          APP_URL: "https://caroney.streamlit.app" 
         run: |
           curl -sSfL "$APP_URL" -o /dev/null
