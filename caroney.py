@@ -32,7 +32,7 @@ def vista_con_conteo(df, drop_cols=None):
 # Config general de la app
 # =========================
 st.set_page_config(page_title="Caroney", page_icon="🐎", layout="centered")
-st.title("💸 - Caroney - Feliz Espuki Sison")
+st.title("💸 - Caroney - Noviembre (sin ti)")
 st.markdown("Registra tus ingresos y egresos de forma compacta y bonita. ¡Hecho con cariño!")
 # Botón de refrescar datos
 if st.button("🔄 Actualizar datos"):
@@ -47,7 +47,7 @@ if st.button("🔄 Actualizar datos"):
 # =====================================
 import random
 
-
+"""
 st.markdown("---")
 st.subheader("🎃 Especial de Octubre")
 
@@ -80,7 +80,7 @@ if st.button("Click aquí para una sorpresa 👻"):
     st.image(gif_url, caption="¡Sorpresa! 🎃")
 
     
-    
+"""  
 # ==========================
 # ==========================
 
