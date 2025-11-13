@@ -32,7 +32,7 @@ def vista_con_conteo(df, drop_cols=None):
 # Config general de la app
 # =========================
 st.set_page_config(page_title="Caroney", page_icon="🐎", layout="centered")
-st.title("💸 - Caroney - Noviembre (sin ti)")
+st.title("💸 - Caroney - ")
 st.markdown("Registra tus ingresos y egresos de forma compacta y bonita. ¡Hecho con cariño!")
 # Botón de refrescar datos
 if st.button("🔄 Actualizar datos"):
